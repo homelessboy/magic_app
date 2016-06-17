@@ -1,0 +1,91 @@
+<resources>
+    <string name="app_name">炫彩魔方</string>
+    <string name="app_title">炫彩魔方设置</string>
+
+    <string name="title_play_way">玩法设置</string>
+    <string-array name="titles_play_way_circle">
+        <item>3个单位</item>
+        <item>2个单位</item>
+        <item>1个单位</item>
+    </string-array>
+    <string-array name="values_play_way_circle">
+        <item>3</item>
+        <item>2</item>
+        <item>1</item>
+    </string-array>
+    <string-array name="titles_play_way_surface">
+        <item>3个单位</item>
+        <item>2个单位</item>
+        <item>1个单位</item>
+        <item>0个单位</item>
+    </string-array>
+    <string-array name="values_play_way_surface">
+        <item>3</item>
+        <item>2</item>
+        <item>1</item>
+        <item>0</item>
+    </string-array>
+
+    <string name="title_operate_way">操作设置</string>
+    <string name="title_operate_way_single">单键操作</string>
+    <string name="summary_operate_way_single">通过单键识别旋转动作</string>
+    <string name="title_operate_way_double_same_way">双键操作(同向识别)</string>
+    <string name="summary_operate_way_double_same_way">按下同一层侧边指向相同方向的按键，相应旋转</string>
+    <string name="title_operate_way_double_dis_way">双键操作(距离识别)</string>
+    <string name="summary_operate_way_double_dis_way">依次按下同一层侧边的两个按键，先按下的指向后按下的方向旋转</string>
+
+    <string name="title_rotation_animation">旋转设置</string>
+    <string name="title_rotation_time">动作时间</string>
+    <string-array name="titles_rotation_time">
+        <item>0.2秒</item>
+        <item>0.5秒</item>
+    </string-array>
+    <string-array name="values_rotation_time">
+        <item>200</item>
+        <item>500</item>
+    </string-array>
+    <string name="title_rotation_round">标示旋转全数</string>
+    <string-array name="titles_rotation_round">
+        <item>取消</item>
+        <item>1圈</item>
+        <item>2圈</item>
+    </string-array>
+    <string-array name="values_rotation_round">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+
+    <string name="title_standby">待机设置</string>
+    <string name="title_standby_animation">待机动画选择</string>
+    <string-array name="titles_standby_animation">
+        <item>测试1</item>
+        <item>测试2</item>
+        <item>测试3</item>
+        <item>测试4</item>
+    </string-array>
+    <string-array name="values_standby_animation">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+    <string name="title_standby_time">进入待机时间</string>
+    <string-array name="titles_standby_time">
+        <item>关闭</item>
+        <item>30秒</item>
+        <item>1分钟</item>
+        <item>2分钟</item>
+        <item>5分钟</item>
+        <item>10分钟</item>
+    </string-array>
+    <string-array name="values_standby_time">
+        <item>0</item>
+        <item>30000</item>
+        <item>60000</item>
+        <item>120000</item>
+        <item>300000</item>
+        <item>600000</item>
+    </string-array>
+
+</resources>

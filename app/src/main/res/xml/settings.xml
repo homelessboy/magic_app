@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+                  android:title="@string/app_title">
+    <PreferenceCategory android:title="@string/title_play_way">
+        <ListPreference
+                android:defaultValue="3"
+                android:summary="单次旋转侧棱移动步长"
+                android:title="侧棱步长"
+                android:entries="@array/titles_play_way_circle"
+                android:entryValues="@array/values_play_way_circle">
+        </ListPreference>
+        <ListPreference
+                android:defaultValue="2"
+                android:summary="单次旋转表面移动步长"
+                android:title="表面步长"
+                android:entries="@array/titles_play_way_surface"
+                android:entryValues="@array/values_play_way_surface">
+        </ListPreference>
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/title_operate_way">
+        <SwitchPreference
+                android:title="@string/title_operate_way_single"
+                android:summary="@string/summary_operate_way_single"
+                android:defaultValue="true"/>
+        <SwitchPreference
+                android:title="@string/title_operate_way_double_same_way"
+                android:summary="@string/summary_operate_way_double_same_way"
+                android:defaultValue="true"/>
+        <SwitchPreference
+                android:title="@string/title_operate_way_double_same_way"
+                android:summary="@string/summary_operate_way_double_dis_way"
+                android:defaultValue="true"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/title_rotation_animation">
+        <ListPreference
+                android:title="@string/title_rotation_time"
+                android:entries="@array/titles_rotation_time"
+                android:entryValues="@array/values_rotation_time"/>
+        <ListPreference
+                android:title="@string/title_rotation_round"
+                android:entries="@array/titles_rotation_round"
+                android:entryValues="@array/values_rotation_round"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/title_standby">
+        <ListPreference
+                android:title="@string/title_standby_animation"
+                android:entries="@array/titles_standby_animation"
+                android:entryValues="@array/values_standby_animation"/>
+        <ListPreference
+                android:title="@string/title_standby_time"
+                android:entries="@array/titles_standby_time"
+                android:entryValues="@array/values_standby_time"/>
+    </PreferenceCategory>
+    <PreferenceCategory android:title="其他">
+        <Preference
+                android:title="说明"/>
+        <Preference
+                android:title="关于"/>
+    </PreferenceCategory>
+
+</PreferenceScreen>
