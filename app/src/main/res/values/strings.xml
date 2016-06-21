@@ -3,8 +3,10 @@
     <string name="app_title">炫彩魔方设置</string>
 
     <string name="title_play_way">玩法设置</string>
+    <string name="title_play_way_circle">侧棱步长</string>
+    <string name="summary_play_way_circle">单次旋转，侧棱旋转距离</string>
     <string-array name="titles_play_way_circle">
-        <item>3个单位</item>
+        <item>3个单位(普通步长)</item>
         <item>2个单位</item>
         <item>1个单位</item>
     </string-array>
@@ -13,6 +15,9 @@
         <item>2</item>
         <item>1</item>
     </string-array>
+
+    <string name="title_play_way_surface">表面步长</string>
+    <string name="summary_play_way_surface">单次旋转，表面旋转距离</string>
     <string-array name="titles_play_way_surface">
         <item>3个单位</item>
         <item>2个单位</item>
@@ -44,7 +49,7 @@
         <item>200</item>
         <item>500</item>
     </string-array>
-    <string name="title_rotation_round">标示旋转全数</string>
+    <string name="title_rotation_round">标示旋转圈数</string>
     <string-array name="titles_rotation_round">
         <item>取消</item>
         <item>1圈</item>
@@ -55,6 +60,14 @@
         <item>1</item>
         <item>2</item>
     </string-array>
+
+    <string name="title_color">魔方颜色设置</string>
+    <string name="title_color_0">正面</string>
+    <string name="title_color_1">右面</string>
+    <string name="title_color_2">背面</string>
+    <string name="title_color_3">左面</string>
+    <string name="title_color_4">底面</string>
+    <string name="title_color_5">上面</string>
 
     <string name="title_standby">待机设置</string>
     <string name="title_standby_animation">待机动画选择</string>
@@ -87,5 +100,10 @@
         <item>300000</item>
         <item>600000</item>
     </string-array>
+
+    <string name="title_other">其他</string>
+    <string name="title_other_tutorial">教程</string>
+    <string name="title_other_introduce">说明</string>
+    <string name="title_other_about">关于</string>
 
 </resources>

@@ -1,18 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
                   android:title="@string/app_title">
+    <PreferenceCategory android:title="连接设备">
+        <SwitchPreference android:title="连接设备" android:defaultValue="false"
+                          android:key="connection"
+        />
+    </PreferenceCategory>
     <PreferenceCategory android:title="@string/title_play_way">
         <ListPreference
                 android:defaultValue="3"
-                android:summary="单次旋转侧棱移动步长"
-                android:title="侧棱步长"
+                android:key="circle_num"
+                android:title="@string/title_play_way_circle"
+                android:summary="@string/summary_play_way_circle"
                 android:entries="@array/titles_play_way_circle"
                 android:entryValues="@array/values_play_way_circle">
         </ListPreference>
         <ListPreference
                 android:defaultValue="2"
-                android:summary="单次旋转表面移动步长"
-                android:title="表面步长"
+                android:key="surface_num"
+                android:title="@string/title_play_way_surface"
+                android:summary="@string/summary_play_way_surface"
                 android:entries="@array/titles_play_way_surface"
                 android:entryValues="@array/values_play_way_surface">
         </ListPreference>
@@ -21,14 +28,17 @@
     <PreferenceCategory android:title="@string/title_operate_way">
         <SwitchPreference
                 android:title="@string/title_operate_way_single"
+                android:key="operate_single"
                 android:summary="@string/summary_operate_way_single"
                 android:defaultValue="true"/>
         <SwitchPreference
                 android:title="@string/title_operate_way_double_same_way"
+                android:key="operate_double_same"
                 android:summary="@string/summary_operate_way_double_same_way"
                 android:defaultValue="true"/>
         <SwitchPreference
                 android:title="@string/title_operate_way_double_same_way"
+                android:key="operate_double_dis"
                 android:summary="@string/summary_operate_way_double_dis_way"
                 android:defaultValue="true"/>
     </PreferenceCategory>
@@ -36,29 +46,69 @@
     <PreferenceCategory android:title="@string/title_rotation_animation">
         <ListPreference
                 android:title="@string/title_rotation_time"
+                android:key="rotation_time"
                 android:entries="@array/titles_rotation_time"
                 android:entryValues="@array/values_rotation_time"/>
         <ListPreference
                 android:title="@string/title_rotation_round"
+                android:key="mask_round"
                 android:entries="@array/titles_rotation_round"
                 android:entryValues="@array/values_rotation_round"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/title_color">
+        <com.magic.afsd.ui.ColorPreference
+                android:key="color_0"
+                android:color="#ff0000f0"
+                android:icon="@drawable/ic_color_title0"
+                android:title="@string/title_color_0"/>
+        <com.magic.afsd.ui.ColorPreference
+                android:icon="@drawable/ic_color_title1"
+                android:key="color_1"
+                android:color="#ff00f000"
+                android:title="@string/title_color_1"/>
+        <com.magic.afsd.ui.ColorPreference
+                android:icon="@drawable/ic_color_title2"
+                android:key="color_2"
+                android:color="#ff00f0f0"
+                android:title="@string/title_color_2"/>
+        <com.magic.afsd.ui.ColorPreference
+                android:icon="@drawable/ic_color_title3"
+                android:key="color_3"
+                android:color="#fff00000"
+                android:title="@string/title_color_3"/>
+        <com.magic.afsd.ui.ColorPreference
+                android:icon="@drawable/ic_color_title4"
+                android:key="color_4"
+                android:color="#fff000f0"
+                android:title="@string/title_color_4"/>
+        <com.magic.afsd.ui.ColorPreference
+                android:icon="@drawable/ic_color_title5"
+                android:key="color_5"
+                android:color="#fff0f000"
+                android:title="@string/title_color_5"/>
+
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/title_standby">
         <ListPreference
                 android:title="@string/title_standby_animation"
+                android:key="standby_index"
                 android:entries="@array/titles_standby_animation"
                 android:entryValues="@array/values_standby_animation"/>
         <ListPreference
                 android:title="@string/title_standby_time"
+                android:key="standby_time"
                 android:entries="@array/titles_standby_time"
                 android:entryValues="@array/values_standby_time"/>
     </PreferenceCategory>
-    <PreferenceCategory android:title="其他">
+    <PreferenceCategory android:title="@string/title_other">
         <Preference
-                android:title="说明"/>
+                android:title="@string/title_other_tutorial"/>
         <Preference
-                android:title="关于"/>
+                android:title="@string/title_other_introduce"/>
+        <Preference
+                android:title="@string/title_other_about"/>
     </PreferenceCategory>
 
 </PreferenceScreen>
