@@ -2,8 +2,14 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
                   android:title="@string/app_title">
     <PreferenceCategory android:title="连接设备">
-        <SwitchPreference android:title="连接设备" android:defaultValue="false"
-                          android:key="connection"
+        <com.magic.afsd.ui.DevicePreference android:title="连接设备"
+                        android:key="devices"
+                        android:summary="设备未连接"
+        />
+        <SwitchPreference android:title="同步设置" android:defaultValue="false"
+                          android:key="sync"
+                          android:summaryOff="设置未同步（确保开启蓝牙，连接设备）"
+                          android:summaryOn="设置已同步"
         />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/title_play_way">

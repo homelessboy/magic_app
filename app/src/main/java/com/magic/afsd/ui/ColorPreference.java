@@ -47,9 +47,6 @@ public class ColorPreference extends DialogPreference {
     public void setmColor(int value) {
         if (mColor != value) {
             mColor = value;
-//            r = mColor >> 16 & 0xFF;
-//            g = mColor >> 8 & 0xFF;
-//            b = mColor & 0xFF;
             persistInt(value);
             icon.setColorFilter(mColor, PorterDuff.Mode.SRC_OVER);
             notifyChanged();

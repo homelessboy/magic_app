@@ -1,16 +1,19 @@
 package com.magic.afsd;
 
 
-import android.content.SharedPreferences;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.content.*;
 import android.os.Bundle;
-import android.preference.ListPreference;
-import android.preference.Preference;
-import android.preference.PreferenceActivity;
-import android.preference.PreferenceManager;
+import android.preference.*;
 import com.magic.afsd.ui.ColorPreference;
+import com.magic.afsd.ui.SettingFragment;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicIntegerFieldUpdater;
 
 /**
  * A {@link PreferenceActivity} that presents a set of application settings. On
@@ -24,55 +27,43 @@ import java.util.List;
  * API Guide</a> for more information on developing a Settings UI.
  */
 public class SettingsActivity extends PreferenceActivity {
-    List<Preference> preferenceList=new ArrayList<>();
+    BluetoothAdapter mAdapter;
+    SettingFragment settingFragment;
+    List<BluetoothDevice> deviceList = new ArrayList<>();
+
+    boolean haveRegister = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        addPreferencesFromResource(R.xml.settings);
-        preferenceList.add(findPreference("connection"));
-        preferenceList.add(findPreference("circle_num"));
-        preferenceList.add(findPreference("surface_num"));
-        preferenceList.add(findPreference("operate_single"));
-        preferenceList.add(findPreference("operate_double_same"));
-        preferenceList.add(findPreference("operate_double_dis"));
-        preferenceList.add(findPreference("rotation_time"));
-        preferenceList.add(findPreference("mask_round"));
-        preferenceList.add(findPreference("color_0"));
-        preferenceList.add(findPreference("color_1"));
-        preferenceList.add(findPreference("color_2"));
-        preferenceList.add(findPreference("color_3"));
-        preferenceList.add(findPreference("color_4"));
-        preferenceList.add(findPreference("color_5"));
-        preferenceList.add(findPreference("standby_index"));
-        preferenceList.add(findPreference("standby_time"));
-        for (Preference preference : preferenceList) {
-            bindPreferenceChange(preference);
-        }
+        settingFragment = new SettingFragment(getApplicationContext());
+        getFragmentManager().beginTransaction().replace(android.R.id.content, settingFragment).commit();
     }
 
-    private static void bindPreferenceChange(Preference preference) {
-        preference.setOnPreferenceChangeListener(preferenceChangeListener);
-        System.out.println(preference.getKey());
-        if (preference instanceof ListPreference)
-            preferenceChangeListener.onPreferenceChange(preference,
-                    PreferenceManager
-                            .getDefaultSharedPreferences(preference.getContext())
-                            .getString(preference.getKey(), ""));
-    }
+//    @Override
+//    protected void onStart() {
+//        super.onStart();
+//        if (!haveRegister) {
+//            haveRegister = true;
+//            IntentFilter filterFound = new IntentFilter(BluetoothDevice.ACTION_FOUND);
+//            IntentFilter filterEnd = new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
+//            registerReceiver(deviceReceiver,filterFound);
+//            registerReceiver(deviceReceiver,filterEnd);
+//        }
+//    }
 
-    private static Preference.OnPreferenceChangeListener preferenceChangeListener = new Preference.OnPreferenceChangeListener() {
-        @Override
-        public boolean onPreferenceChange(Preference preference, Object value) {
-            String stringValue = value.toString();
-            if (preference instanceof ListPreference) {
-                ListPreference listPreference = (ListPreference) preference;
-                int index = listPreference.findIndexOfValue(stringValue);
-                preference.setSummary(
-                        index >= 0
-                                ? listPreference.getEntries()[index]
-                                : null);
-            }
-            return true;
-        }
-    };
+//    private class DeviceReceiver extends BroadcastReceiver {
+//        @Override
+//        public void onReceive(Context context, Intent intent) {
+//            String action = intent.getAction();
+//            if(BluetoothDevice.ACTION_FOUND.equals(action)){
+//                BluetoothDevice btd=intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+//                if(btd.getBondState()!=BluetoothDevice.BOND_BONDED){
+//                    deviceList.add()
+//                }
+//            }
+//
+//        }
+//    }
+
 }
