@@ -32,6 +32,7 @@ public class SettingFragment extends PreferenceFragment {
     private BluetoothAdapter mAdapter;
     private BluetoothSocket socket;
     private Context context;
+    private int enableNum;
 
     private String nowAddress;
 
@@ -124,7 +125,7 @@ public class SettingFragment extends PreferenceFragment {
                 }
                 findPreference("devices").setEnabled(true);
                 findPreference("sync").setEnabled(true);
-                sync=false;
+                sync = false;
                 System.out.println("in false");
                 return true;
             }
@@ -156,33 +157,33 @@ public class SettingFragment extends PreferenceFragment {
             boolean boolValue = (boolean) value;
             btSetting.setDoubleDis(boolValue);
         }
-        if(preference.getKey().equals("rotation_time")){
-            String str=(String) value;
-            long num=Long.parseLong(str);
+        if (preference.getKey().equals("rotation_time")) {
+            String str = (String) value;
+            long num = Long.parseLong(str);
             btSetting.setRotationTime(num);
         }
-        if(preference.getKey().equals("mask_round")){
-            String str=(String) value;
-            int num=Integer.parseInt(str);
+        if (preference.getKey().equals("mask_round")) {
+            String str = (String) value;
+            int num = Integer.parseInt(str);
             btSetting.setMaskRound(num);
         }
-        if(preference.getKey().contains("color_")){
+        if (preference.getKey().contains("color_")) {
             System.out.println("colorSetting");
-            int data[]=new int[6];
-            for(int i=0;i<6;i++) {
+            int data[] = new int[6];
+            for (int i = 0; i < 6; i++) {
                 ColorPreference colorPreference = (ColorPreference) findPreference("color_" + i);
-                data[i]=colorPreference.getmColor();
+                data[i] = colorPreference.getmColor();
             }
-            String key=preference.getKey();
-            String indexStr=key.substring(preference.getKey().indexOf("_")+1);
-            int index=Integer.parseInt(indexStr);
-            data[index]= (int) value;
+            String key = preference.getKey();
+            String indexStr = key.substring(preference.getKey().indexOf("_") + 1);
+            int index = Integer.parseInt(indexStr);
+            data[index] = (int) value;
             btSetting.setColor(data);
         }
-        if(preference.getKey().equals("standby_time")){
+        if (preference.getKey().equals("standby_time")) {
             System.out.println("standby_time");
-            String str=(String) value;
-            long num=Long.parseLong(str);
+            String str = (String) value;
+            long num = Long.parseLong(str);
             btSetting.setStandbyTime(num);
         }
 
@@ -213,56 +214,86 @@ public class SettingFragment extends PreferenceFragment {
                     break;
                 case CIRCLE_STEP_AC:
                     listPreference = (ListPreference) findPreference("circle_num");
-                    if (!listPreference.isEnabled()) listPreference.setEnabled(true);
+                    if (!listPreference.isEnabled()) {
+                        listPreference.setEnabled(true);
+                        enableNum++;
+                    }
                     listPreference.setValue(bundle.getByte(headStr) + "");
                     sync = true;
                     break;
                 case SURFACE_STEP_AC:
                     listPreference = (ListPreference) findPreference("surface_num");
-                    if (!listPreference.isEnabled()) listPreference.setEnabled(true);
+                    if (!listPreference.isEnabled()) {
+                        listPreference.setEnabled(true);
+                        enableNum++;
+                    }
                     listPreference.setValue(bundle.getByte(headStr) + "");
                     break;
                 case SINGLE_OPERATE_AC:
                     switchPreference = (SwitchPreference) findPreference("operate_single");
-                    if (!switchPreference.isEnabled()) switchPreference.setEnabled(true);
+                    if (!switchPreference.isEnabled()) {
+                        switchPreference.setEnabled(true);
+                        enableNum++;
+                    }
                     switchPreference.setChecked(bundle.getBoolean(headStr));
                     break;
                 case DOUBLE_SAME_AC:
                     switchPreference = (SwitchPreference) findPreference("operate_double_same");
-                    if (!switchPreference.isEnabled()) switchPreference.setEnabled(true);
+                    if (!switchPreference.isEnabled()) {
+                        switchPreference.setEnabled(true);
+                        enableNum++;
+                    }
                     switchPreference.setChecked(bundle.getBoolean(headStr));
                     break;
                 case DOUBLE_DIS_AC:
                     switchPreference = (SwitchPreference) findPreference("operate_double_dis");
-                    if (!switchPreference.isEnabled()) switchPreference.setEnabled(true);
+                    if (!switchPreference.isEnabled()) {
+                        switchPreference.setEnabled(true);
+                        enableNum++;
+                    }
                     switchPreference.setChecked(bundle.getBoolean(headStr));
                     break;
                 case TIME_P_AC:
                     listPreference = (ListPreference) findPreference("rotation_time");
-                    if (!listPreference.isEnabled()) listPreference.setEnabled(true);
+                    if (!listPreference.isEnabled()){
+                        listPreference.setEnabled(true);
+                        enableNum++;
+                    }
                     listPreference.setValue(bundle.getLong(headStr) + "");
                     break;
                 case MASK_ROUND_AC:
                     listPreference = (ListPreference) findPreference("mask_round");
-                    if (!listPreference.isEnabled()) listPreference.setEnabled(true);
+                    if (!listPreference.isEnabled()) {
+                        listPreference.setEnabled(true);
+                        enableNum++;
+                    }
                     listPreference.setValue(bundle.getByte(headStr) + "");
                     break;
                 case COLOR_AC:
-                    int[] data=bundle.getIntArray(headStr);
-                    for(int i=0;i<6;i++){
-                        ColorPreference colorPreference= (ColorPreference) findPreference("color_"+i);
+                    int[] data = bundle.getIntArray(headStr);
+                    if(!findPreference("color_0").isEnabled())
+                        enableNum++;
+                    for (int i = 0; i < 6; i++) {
+                        ColorPreference colorPreference = (ColorPreference) findPreference("color_" + i);
                         colorPreference.setEnabled(true);
                         colorPreference.setmColor(data[i]);
                     }
                     break;
                 case STANDBY_TIME_AC:
-                    listPreference= (ListPreference) findPreference("standby_time");
-                    if(!listPreference.isEnabled()) listPreference.setEnabled(true);
+                    listPreference = (ListPreference) findPreference("standby_time");
+                    if (!listPreference.isEnabled()) {
+                        listPreference.setEnabled(true);
+                        enableNum++;
+                    }
                     System.out.println(bundle.getLong(headStr));
-                    listPreference.setValue(bundle.getLong(headStr)+"");
+                    listPreference.setValue(bundle.getLong(headStr) + "");
                     break;
                 default:
                     break;
+            }
+            switchPreference= (SwitchPreference) findPreference("sync");
+            if(!switchPreference.isChecked()&&enableNum==9){
+                switchPreference.setChecked(true);
             }
         }
     };
