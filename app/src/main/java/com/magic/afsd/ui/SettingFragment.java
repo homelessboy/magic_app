@@ -7,35 +7,44 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.os.ParcelUuid;
 import android.preference.*;
 import com.magic.afsd.R;
+import com.magic.afsd.trans.BTSetting;
+import com.magic.afsd.trans.ReadThread;
+import com.magic.afsd.trans.SettingHead;
+import com.magic.afsd.trans.Trans;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.*;
-import java.util.concurrent.ThreadLocalRandom;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.UUID;
+
+
+import static com.magic.afsd.trans.SettingHead.*;
 
 /**
  * @author: afsd
  * @version: ${VERSION}
  */
 public class SettingFragment extends PreferenceFragment {
-    List<Preference> preferenceList = new ArrayList<>();
-    BluetoothAdapter mAdapter;
-    BluetoothSocket socket;
-    Context context;
+    private Map<String, Preference> preferenceMap = new HashMap<>();
+    private BluetoothAdapter mAdapter;
+    private BluetoothSocket socket;
+    private Context context;
 
-    String nowAddress;
+    private String nowAddress;
 
-    ReadThread readThread;
+    private ReadThread readThread;
+    private BTSetting btSetting;
+    private Trans trans = new Trans();
+    private boolean sync = false;
 
-    String uuid = "00001101-0000-1000-8000-00805F9B34FB";
+    private String uuid = "00001101-0000-1000-8000-00805F9B34FB";
 
-    public SettingFragment(Context context){
+    public SettingFragment(Context context) {
         super();
-        this.context=context;
+        this.context = context;
     }
 
     @Override
@@ -44,27 +53,32 @@ public class SettingFragment extends PreferenceFragment {
         addPreferencesFromResource(R.xml.settings);
         mAdapter = BluetoothAdapter.getDefaultAdapter();
         setUpPreference();
+        readThread = new ReadThread(mAdapter);
+        btSetting = new BTSetting(mHandler, preferenceMap);
+        btSetting.setTrans(trans);
+        readThread.setTrans(trans);
+        trans.setBtSetting(btSetting);
     }
 
-    private void setUpPreference(){
-        preferenceList.add(findPreference("devices"));
-        preferenceList.add(findPreference("sync"));
-        preferenceList.add(findPreference("circle_num"));
-        preferenceList.add(findPreference("surface_num"));
-        preferenceList.add(findPreference("operate_single"));
-        preferenceList.add(findPreference("operate_double_same"));
-        preferenceList.add(findPreference("operate_double_dis"));
-        preferenceList.add(findPreference("rotation_time"));
-        preferenceList.add(findPreference("mask_round"));
-        preferenceList.add(findPreference("color_0"));
-        preferenceList.add(findPreference("color_1"));
-        preferenceList.add(findPreference("color_2"));
-        preferenceList.add(findPreference("color_3"));
-        preferenceList.add(findPreference("color_4"));
-        preferenceList.add(findPreference("color_5"));
-        preferenceList.add(findPreference("standby_index"));
-        preferenceList.add(findPreference("standby_time"));
-        for (Preference preference : preferenceList) {
+    private void setUpPreference() {
+        preferenceMap.put("devices", findPreference("devices"));
+        preferenceMap.put("sync", findPreference("sync"));
+        preferenceMap.put("circle_num", findPreference("circle_num"));
+        preferenceMap.put("surface_num", findPreference("surface_num"));
+        preferenceMap.put("operate_single", findPreference("operate_single"));
+        preferenceMap.put("operate_double_same", findPreference("operate_double_same"));
+        preferenceMap.put("operate_double_dis", findPreference("operate_double_dis"));
+        preferenceMap.put("rotation_time", findPreference("rotation_time"));
+        preferenceMap.put("mask_round", findPreference("mask_round"));
+        preferenceMap.put("color_0", findPreference("color_0"));
+        preferenceMap.put("color_1", findPreference("color_1"));
+        preferenceMap.put("color_2", findPreference("color_2"));
+        preferenceMap.put("color_3", findPreference("color_3"));
+        preferenceMap.put("color_4", findPreference("color_4"));
+        preferenceMap.put("color_5", findPreference("color_5"));
+        preferenceMap.put("standby_index", findPreference("standby_index"));
+        preferenceMap.put("standby_time", findPreference("standby_time"));
+        for (Preference preference : preferenceMap.values()) {
             bindPreferenceChange(preference);
             preference.setEnabled(false);
         }
@@ -102,46 +116,77 @@ public class SettingFragment extends PreferenceFragment {
             boolean boolValue = (boolean) value;
             if (boolValue) {
                 System.out.println("in true");
+                btSetting.syncAC();
                 return false;
-            }else{
+            } else {
+                for (Preference preferenceItem : preferenceMap.values()) {
+                    preferenceItem.setEnabled(false);
+                }
+                findPreference("devices").setEnabled(true);
+                findPreference("sync").setEnabled(true);
+                sync=false;
                 System.out.println("in false");
-
+                return true;
             }
         }
         if (preference.getKey().equals("devices")) {
-            String stringValue = (String) value;
-            if (nowAddress != null && nowAddress.equals(stringValue)) {
-                try {
-                    socket.getOutputStream().write("ok\n".getBytes());
-                    socket.getOutputStream().flush();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                return false;
-            }
-            nowAddress = stringValue;
-            Iterator it = mAdapter.getBondedDevices().iterator();
-            BluetoothDevice device = (BluetoothDevice) it.next();
-            while (it.hasNext()) {
-                if (device.getAddress().equals(stringValue))
-                    break;
-                device = (BluetoothDevice) it.next();
-            }
-            if (device.getAddress().equals(stringValue))
-                try {
-                    socket = device.createRfcommSocketToServiceRecord(UUID.fromString(uuid));
-                    System.out.println(socket.isConnected());
-                    if (!socket.isConnected())
-                        socket.connect();
-                    if (socket.isConnected()) {
-                        readThread = new ReadThread(socket);
-                        readThread.start();
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+            readThread.connection((String) value);
         }
-        return true;
+        if (!sync) return true;
+
+        if (preference.getKey().equals("circle_num")) {
+            String str = (String) value;
+            int num = Integer.parseInt(str);
+            btSetting.setCircleNum(num);
+        }
+        if (preference.getKey().equals("surface_num")) {
+            String str = (String) value;
+            int num = Integer.parseInt(str);
+            btSetting.setSurfaceNum(num);
+        }
+        if (preference.getKey().equals("operate_single")) {
+            boolean boolValue = (boolean) value;
+            btSetting.setSingleOperate(boolValue);
+        }
+        if (preference.getKey().equals("operate_double_same")) {
+            boolean boolValue = (boolean) value;
+            btSetting.setDoubleSame(boolValue);
+        }
+        if (preference.getKey().equals("operate_double_dis")) {
+            boolean boolValue = (boolean) value;
+            btSetting.setDoubleDis(boolValue);
+        }
+        if(preference.getKey().equals("rotation_time")){
+            String str=(String) value;
+            long num=Long.parseLong(str);
+            btSetting.setRotationTime(num);
+        }
+        if(preference.getKey().equals("mask_round")){
+            String str=(String) value;
+            int num=Integer.parseInt(str);
+            btSetting.setMaskRound(num);
+        }
+        if(preference.getKey().contains("color_")){
+            System.out.println("colorSetting");
+            int data[]=new int[6];
+            for(int i=0;i<6;i++) {
+                ColorPreference colorPreference = (ColorPreference) findPreference("color_" + i);
+                data[i]=colorPreference.getmColor();
+            }
+            String key=preference.getKey();
+            String indexStr=key.substring(preference.getKey().indexOf("_")+1);
+            int index=Integer.parseInt(indexStr);
+            data[index]= (int) value;
+            btSetting.setColor(data);
+        }
+        if(preference.getKey().equals("standby_time")){
+            System.out.println("standby_time");
+            String str=(String) value;
+            long num=Long.parseLong(str);
+            btSetting.setStandbyTime(num);
+        }
+
+        return false;
     }
 
     @Override
@@ -155,58 +200,66 @@ public class SettingFragment extends PreferenceFragment {
             }
     }
 
-    private class ReadThread extends Thread {
-        private BluetoothSocket socket;
-        private InputStream inputStream;
-        private OutputStream outputStream;
-
-        public ReadThread(BluetoothSocket socket) throws IOException {
-            this.socket = socket;
-            this.inputStream = socket.getInputStream();
-            this.outputStream = socket.getOutputStream();
-            try {
-                byte[] hello = {(byte) 0xAA, (byte) 0xAA, 1};
-                outputStream.write("ok\n".getBytes());
-                outputStream.flush();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-        public void run() {
-            byte[] buffer = new byte[1024];
-            String read = "";
-            int bytes;
-            while (true) {
-                try {
-                    if ((bytes = inputStream.read(buffer)) > 0) {
-                        System.out.println("size:" + bytes);
-                        for (int i = 0; i < bytes; i++) {
-                            if (buffer[i] == '\n') {
-                                System.out.println(read);
-                                Message message = new Message();
-                                message.what = 1;
-                                mHandler.sendMessage(message);
-                                ((SwitchPreference)findPreference("sync")).setChecked(false);
-                                ((ListPreference)findPreference("circle_num")).setValueIndex(0);
-                                read = "";
-                            } else
-                                read += (char) buffer[i];
-                        }
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
-
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
+            Bundle bundle = msg.getData();
+            String headStr = bundle.getByte("head") + "";
+            ListPreference listPreference;
+            SwitchPreference switchPreference;
             switch (msg.what) {
-                case 1:
+                case CONNECTION_AC:
                     findPreference("sync").setEnabled(true);
+                    break;
+                case CIRCLE_STEP_AC:
+                    listPreference = (ListPreference) findPreference("circle_num");
+                    if (!listPreference.isEnabled()) listPreference.setEnabled(true);
+                    listPreference.setValue(bundle.getByte(headStr) + "");
+                    sync = true;
+                    break;
+                case SURFACE_STEP_AC:
+                    listPreference = (ListPreference) findPreference("surface_num");
+                    if (!listPreference.isEnabled()) listPreference.setEnabled(true);
+                    listPreference.setValue(bundle.getByte(headStr) + "");
+                    break;
+                case SINGLE_OPERATE_AC:
+                    switchPreference = (SwitchPreference) findPreference("operate_single");
+                    if (!switchPreference.isEnabled()) switchPreference.setEnabled(true);
+                    switchPreference.setChecked(bundle.getBoolean(headStr));
+                    break;
+                case DOUBLE_SAME_AC:
+                    switchPreference = (SwitchPreference) findPreference("operate_double_same");
+                    if (!switchPreference.isEnabled()) switchPreference.setEnabled(true);
+                    switchPreference.setChecked(bundle.getBoolean(headStr));
+                    break;
+                case DOUBLE_DIS_AC:
+                    switchPreference = (SwitchPreference) findPreference("operate_double_dis");
+                    if (!switchPreference.isEnabled()) switchPreference.setEnabled(true);
+                    switchPreference.setChecked(bundle.getBoolean(headStr));
+                    break;
+                case TIME_P_AC:
+                    listPreference = (ListPreference) findPreference("rotation_time");
+                    if (!listPreference.isEnabled()) listPreference.setEnabled(true);
+                    listPreference.setValue(bundle.getLong(headStr) + "");
+                    break;
+                case MASK_ROUND_AC:
+                    listPreference = (ListPreference) findPreference("mask_round");
+                    if (!listPreference.isEnabled()) listPreference.setEnabled(true);
+                    listPreference.setValue(bundle.getByte(headStr) + "");
+                    break;
+                case COLOR_AC:
+                    int[] data=bundle.getIntArray(headStr);
+                    for(int i=0;i<6;i++){
+                        ColorPreference colorPreference= (ColorPreference) findPreference("color_"+i);
+                        colorPreference.setEnabled(true);
+                        colorPreference.setmColor(data[i]);
+                    }
+                    break;
+                case STANDBY_TIME_AC:
+                    listPreference= (ListPreference) findPreference("standby_time");
+                    if(!listPreference.isEnabled()) listPreference.setEnabled(true);
+                    System.out.println(bundle.getLong(headStr));
+                    listPreference.setValue(bundle.getLong(headStr)+"");
                     break;
                 default:
                     break;

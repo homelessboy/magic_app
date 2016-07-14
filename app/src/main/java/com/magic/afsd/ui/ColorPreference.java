@@ -3,6 +3,7 @@ package com.magic.afsd.ui;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.preference.DialogPreference;
@@ -19,6 +20,7 @@ import com.magic.afsd.R;
  * @version: ${VERSION}
  */
 public class ColorPreference extends DialogPreference {
+    private Color color=new Color();
     private Context mContext;
     private Drawable icon;
     private int iconId;
@@ -47,10 +49,14 @@ public class ColorPreference extends DialogPreference {
     public void setmColor(int value) {
         if (mColor != value) {
             mColor = value;
-            persistInt(value);
+//            persistInt(mColor);
             icon.setColorFilter(mColor, PorterDuff.Mode.SRC_OVER);
             notifyChanged();
         }
+    }
+
+    public int getmColor(){
+        return mColor;
     }
 
     public ColorPreference(Context context, AttributeSet attrs, int defStyleAttr) {
@@ -79,12 +85,6 @@ public class ColorPreference extends DialogPreference {
         editTextG.setText((mColor >> 8 & 0xFF)+ "");
         editTextB.setText((mColor & 0xFF)+ "");
         builder.setView(view);
-        builder.setPositiveButton("确认", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
     }
 
     @Override
@@ -104,7 +104,7 @@ public class ColorPreference extends DialogPreference {
             value=r<<16|value;
             value=g<<8|value;
             value=b|value;
-            if(callChangeListener(mColor))
+            if(callChangeListener(value))
                 setmColor(value);
         }
 

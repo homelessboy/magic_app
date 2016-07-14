@@ -14,7 +14,7 @@
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/title_play_way">
         <ListPreference
-                android:defaultValue="3"
+                android:defaultValue="0"
                 android:key="circle_num"
                 android:title="@string/title_play_way_circle"
                 android:summary="@string/summary_play_way_circle"

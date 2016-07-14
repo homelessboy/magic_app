@@ -6,9 +6,9 @@
     <string name="title_play_way_circle">侧棱步长</string>
     <string name="summary_play_way_circle">单次旋转，侧棱旋转距离</string>
     <string-array name="titles_play_way_circle">
-        <item>3个单位(普通步长)</item>
+        <item>3个单位(正常模式）</item>
         <item>2个单位</item>
-        <item>1个单位</item>
+        <item>1个单位(简单模式)</item>
     </string-array>
     <string-array name="values_play_way_circle">
         <item>3</item>
@@ -20,9 +20,9 @@
     <string name="summary_play_way_surface">单次旋转，表面旋转距离</string>
     <string-array name="titles_play_way_surface">
         <item>3个单位</item>
-        <item>2个单位</item>
+        <item>2个单位(正常模式)</item>
         <item>1个单位</item>
-        <item>0个单位</item>
+        <item>0个单位(简单模式)</item>
     </string-array>
     <string-array name="values_play_way_surface">
         <item>3</item>
@@ -90,7 +90,6 @@
         <item>1分钟</item>
         <item>2分钟</item>
         <item>5分钟</item>
-        <item>10分钟</item>
     </string-array>
     <string-array name="values_standby_time">
         <item>0</item>
@@ -98,7 +97,6 @@
         <item>60000</item>
         <item>120000</item>
         <item>300000</item>
-        <item>600000</item>
     </string-array>
 
     <string name="title_other">其他</string>
